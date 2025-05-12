@@ -1,0 +1,75 @@
+**Livestock Farm Project – Refactor & Feature Update (May 9)**
+
+---
+
+**✅ Cattle Class Refactoring**
+
+* Moved common fields (`id`, `location`, `vaccinated`, `earTag`) and methods (`vaccinate()`, `applyEarTag()`, `getId()`, `getLocation()`, `hasEarTag()`, etc.) to the abstract `Cattle` superclass.
+* Simplified `BeefCattle` and `DairyCattle` classes to only override `getType()` and `Accept(visitor)` methods.
+* This ensures consistent behavior and avoids code duplication.
+
+---
+
+**✅ Visitor Pattern Enhancements**
+
+* `VeterinaryVisitor`:
+
+  * Visits every cattle and vaccinates them if they haven't already been vaccinated.
+* `MinistryVisitor`:
+
+  * Checks each cattle for a plastic ear tag.
+  * If missing, logs:
+    `⚠️ Cattle with ID <id> has no ear tag! Applying one...`
+    then applies the tag.
+  * If already tagged, logs:
+    `✔️ Cattle with ID <id> already has an ear tag.`
+  * Fully aligns with the requirement that the ministry *checks* each animal, rather than silently applying tags.
+
+---
+
+**✅ Observer Pattern (Push-style Notification)**
+
+* Converted `LocationDatabase` into a subject that supports `addObserver()` and `notifyObservers()`.
+* `Farmer` class implements `Observer` and gets notified when a cattle exits farm boundaries.
+* Notification message includes both ID and location:
+  `Notifying farmer: Cattle <id> is outside the farm at <location>!`
+* Ensures reactive behavior and simulates real-time location tracking.
+
+---
+
+**✅ Farm Boundary Monitoring**
+
+* Defined valid farm locations: `"North Field"`, `"South Field"`, `"Barn"`, `"Pasture"`.
+* `LocationDatabase.storeLocation()` now checks if a reported location is outside of these.
+
+  * If so, prints:
+    `ALERT: <id> exited the farm! Notifying farmer...`
+    then triggers observer update.
+* Implements the requirement: *“If a cattle exits the farm boundaries, the farmer is notified.”*
+
+---
+
+**✅ Main Class Cleanup and Beautification**
+
+* Grouped outputs by design pattern for better readability:
+
+  * Factory Pattern
+  * Visitor Pattern
+  * Adapter Pattern
+  * Observer Pattern
+  * Abstract Factory Pattern
+* Added section headers and spacing to clarify flow.
+* Simulated key scenarios:
+
+  * A cattle missing an ear tag
+  * A cattle going outside the farm boundary
+
+---
+
+**✅ Additional Improvements**
+
+* Removed unnecessary method overrides in subclasses.
+* Clarified logic around what it means to be “tagged.”
+* Ensured behavioral consistency across components.
+
+---
